@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 initTypewriter();
             }, 800);
         }
-    }, 2000); 
+    }, 1500); 
 
     function initTypewriter() {
         const text = "Defying Gravity through Code and Art. Welcome to my creative dimension.";
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bgMusic.play().then(() => { 
                 musicStarted = true; 
                 console.log("Audio started on interaction");
-            }).catch(e => console.log("Autoplay blocked. User needs to click again.", e));
+            }).catch(e => console.log("Autoplay blocked.", e));
         }
         if (musicStarted) {
             ['click', 'touchstart', 'scroll', 'keydown'].forEach(evt => 
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- THREE.JS BACKGROUND FIX (NO MORE BIG BOXES, EXACTLY 5000 PARTICLES) ---
+    // --- THREE.JS BACKGROUND (RADIAL GLOW FIX) ---
     const bgCanvas = document.getElementById('webgl-canvas');
     if(bgCanvas && typeof THREE !== 'undefined') {
         const bgScene = new THREE.Scene();
@@ -203,11 +203,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const bgRenderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: true });
         bgRenderer.setSize(window.innerWidth, window.innerHeight);
-        bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        const isMobile = window.innerWidth < 768;
+        bgRenderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
 
         const particlesGeometry = new THREE.BufferGeometry();
-        // FIX 2 & 3: Reduced to exactly 5000
-        const particlesCount = 1400; 
+        
+        const particlesCount = isMobile ? 600 : 3500; 
         const posArray = new Float32Array(particlesCount * 3);
         const colorsArray = new Float32Array(particlesCount * 3);
 
@@ -224,13 +226,33 @@ document.addEventListener('DOMContentLoaded', () => {
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorsArray, 3));
         
+        // SOFT GLOWING RADIAL GRADIENT TEXTURE
+        const glowTexture = new THREE.CanvasTexture((function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64; canvas.height = 64;
+            const context = canvas.getContext('2d');
+            
+            const gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');      // Solid Core
+            gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.6)');    // Inner Glow
+            gradient.addColorStop(0.8, 'rgba(255, 255, 255, 0.1)');    // Outer Glow Fade
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');        // Transparent Edge
+            
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, 64, 64);
+            return canvas;
+        })());
+
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 2.5, // Fixed absolute pixel size
-            sizeAttenuation: false, // FIX 1: This stops them from scaling up into huge blocks!
+            size: 3.5, // Increased slightly to make the glow fade visible
+            sizeAttenuation: false, 
+            map: glowTexture, 
             vertexColors: true, 
             transparent: true, 
-            opacity: 0.8, 
-            blending: THREE.AdditiveBlending
+            opacity: 1, // Full opacity for the bright core
+            alphaTest: 0.01, // Eliminates black boxes
+            depthWrite: false, // Fixes depth overlap issues
+            blending: THREE.AdditiveBlending // Crucial for that bright glowing pearl effect
         });
         
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
