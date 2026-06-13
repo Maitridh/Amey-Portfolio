@@ -632,39 +632,6 @@ footer#contact { background: var(--dark-glass); border-top: 1px solid var(--bord
     display:block;
     object-fit:cover;
 }
-/* play button overlay */
-.proj-play-btn-wrap {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 16px; z-index: 3;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-}
-.proj-play-btn-wrap.hidden { opacity: 0; pointer-events: none; }
-.proj-play-circle {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: rgba(124, 58, 237, 0.25);
-    border: 2px solid rgba(192, 132, 252, 0.6);
-    display: flex; align-items: center; justify-content: center;
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 0 30px rgba(124,58,237,0.3);
-}
-.proj-play-btn-wrap:hover .proj-play-circle {
-    transform: scale(1.12);
-    background: rgba(124, 58, 237, 0.5);
-    box-shadow: 0 0 50px rgba(124,58,237,0.55);
-}
-.proj-play-circle i { font-size: 1.8rem; color: #fff; margin-left: 4px; }
-.proj-play-label {
-    font-family: var(--font-title);
-    font-size: 0.65rem;
-    letter-spacing: 3px;
-    color: rgba(255,255,255,0.7);
-    text-transform: uppercase;
-}
 
 /* cinematic info bar */
 .proj-cinematic-info {
@@ -1238,7 +1205,8 @@ footer#contact { background: var(--dark-glass); border-top: 1px solid var(--bord
                     <div class="proj-section-label">Cinematic Showcase</div>
                     <div class="proj-cinematic-wrap">
                         <div class="proj-cinematic-screen">
-                                <video
+                            <div class="video-container">
+  <video
       id="heroVideo"
       autoplay
       muted
@@ -1246,11 +1214,11 @@ footer#contact { background: var(--dark-glass); border-top: 1px solid var(--bord
       playsinline
       controls>
 
-      <source src=images/losthorizon.mp4 type="video/mp4">
+      <source src="images/losthorizon.mp4" type="video/mp4">
 
   </video>
 </div>
-                          
+                            
                         </div>
                         <div class="proj-cinematic-info">
                             <div class="proj-cinematic-title-group">
@@ -1451,7 +1419,6 @@ document.addEventListener('DOMContentLoaded', () => {
     muteBtn.addEventListener('click', e => { e.stopPropagation(); bgMusic.muted = !bgMusic.muted; muteBtn.innerHTML = bgMusic.muted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>'; });
     volSlider.addEventListener('input', e => { e.stopPropagation(); bgMusic.volume = parseFloat(e.target.value); if (bgMusic.volume > 0 && bgMusic.muted) { bgMusic.muted = false; muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>'; } });
 
-/*Video*/
     const video = document.getElementById("heroVideo");
 
 const observer = new IntersectionObserver((entries) => {
