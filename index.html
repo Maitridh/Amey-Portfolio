@@ -619,27 +619,19 @@ footer#contact { background: var(--dark-glass); border-top: 1px solid var(--bord
 }
 
 /* video frame */
-.proj-cinematic-screen {
-    position: relative;
-    aspect-ratio: 16/9;
-    background: #000;
-    overflow: hidden;
+.video-container{
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+    border-radius:20px;
+    overflow:hidden;
 }
-.proj-cinematic-screen video,
-.proj-cinematic-screen iframe {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    border: none;
-}
-.proj-cinematic-poster {
-    width: 100%; height: 100%;
-    object-fit: cover; display: block;
-    filter: brightness(0.55) saturate(1.2);
-    transition: filter 0.4s ease;
-}
-.proj-cinematic-wrap:hover .proj-cinematic-poster { filter: brightness(0.45) saturate(1.4); }
 
+.video-container video{
+    width:100%;
+    display:block;
+    object-fit:cover;
+}
 /* play button overlay */
 .proj-play-btn-wrap {
     position: absolute; inset: 0;
@@ -701,19 +693,7 @@ footer#contact { background: var(--dark-glass); border-top: 1px solid var(--bord
     flex-shrink: 0;
 }
 
-/* scan-line aesthetic overlay */
-.proj-cinematic-screen::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0,0,0,0) 0px,
-        rgba(0,0,0,0) 2px,
-        rgba(0,0,0,0.04) 2px,
-        rgba(0,0,0,0.04) 4px
-    );
-    pointer-events: none; z-index: 1;
-}
+
 /* vignette */
 .proj-cinematic-screen::after {
     content: '';
@@ -1258,20 +1238,19 @@ footer#contact { background: var(--dark-glass); border-top: 1px solid var(--bord
                     <div class="proj-section-label">Cinematic Showcase</div>
                     <div class="proj-cinematic-wrap">
                         <div class="proj-cinematic-screen">
-                            <iframe
-  width="100%"
-  height="100%"
-  src="https://youtu.be/owm8dVMF8-E?si=oJKmJz9iZWAONvXf"
-  title="YouTube video player"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  referrerpolicy="strict-origin-when-cross-origin"
-  allowfullscreen>
-</iframe>
-                            <div class="proj-play-btn-wrap" id="play-horizon">
-                                <div class="proj-play-circle"><i class="fa-solid fa-play"></i></div>
-                                <span class="proj-play-label">Watch Cinematic</span>
-                            </div>
+                                <video
+      id="heroVideo"
+      autoplay
+      muted
+      loop
+      playsinline
+      controls>
+
+      <source src="C:\Users\MAITRI\Downloads\losthorizon.mp4" type="video/mp4">
+
+  </video>
+</div>
+                          
                         </div>
                         <div class="proj-cinematic-info">
                             <div class="proj-cinematic-title-group">
@@ -1471,6 +1450,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const volSlider = document.getElementById('volume-slider');
     muteBtn.addEventListener('click', e => { e.stopPropagation(); bgMusic.muted = !bgMusic.muted; muteBtn.innerHTML = bgMusic.muted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>'; });
     volSlider.addEventListener('input', e => { e.stopPropagation(); bgMusic.volume = parseFloat(e.target.value); if (bgMusic.volume > 0 && bgMusic.muted) { bgMusic.muted = false; muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>'; } });
+
+/*Video*/
+    const video = document.getElementById("heroVideo");
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+
+        if(entry.isIntersecting){
+            video.play();
+        } else {
+            video.pause();
+        }
+
+    });
+},{
+    threshold: 0.3 // play when 30% visible
+});
+
+observer.observe(video);
 
     /* ── THEME ── */
     const themeBtn = document.getElementById('theme-toggle');
