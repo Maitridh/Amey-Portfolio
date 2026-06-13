@@ -634,6 +634,26 @@ footer#contact { background: var(--dark-glass); border-top: 1px solid var(--bord
 }
 
 /* cinematic info bar */
+    body.light-mode .proj-cinematic-info{
+    background: rgba(255,255,255,0.92);
+    border-top: 1px solid rgba(0,0,0,0.08);
+}
+body.light-mode .proj-cinematic-title{
+    color: #111111;
+}
+body.light-mode .proj-cinematic-desc{
+    color: #555555;
+}
+body.light-mode .proj-cinematic-badge{
+    background: rgba(124,58,237,0.08);
+
+    border: 1px solid rgba(124,58,237,0.18);
+
+    color: var(--primary-color);
+
+    box-shadow:
+        0 6px 18px rgba(124,58,237,0.08);
+}
 .proj-cinematic-info {
     padding: 22px 28px;
     display: flex; align-items: center; justify-content: space-between;
@@ -659,15 +679,22 @@ footer#contact { background: var(--dark-glass); border-top: 1px solid var(--bord
     color: var(--primary-color); text-transform: uppercase;
     flex-shrink: 0;
 }
-
-
 /* vignette */
+    body.light-mode .proj-cinematic-screen::after{
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(255,255,255,0) 45%,
+            rgba(0,0,0,0.06) 100%
+        );
+}
 .proj-cinematic-screen::after {
     content: '';
     position: absolute; inset: 0;
     background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%);
     pointer-events: none; z-index: 1;
 }
+    
 
 /* ═══════════════════════════════════════════
    PROJECT NAVIGATION BUTTONS
